@@ -5,6 +5,17 @@ const { token } = require('./config.json');
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
+//initilize game info 
+client.gameInfo = {
+	gameStatus : false,
+	gamePresence: false,
+	deck : [],
+	players : [],
+	playerCount: 0,
+	hands : {},
+	cardPool : [],
+	MAX_PLAYER : 4,
+}
 
 
 //commands to be used
