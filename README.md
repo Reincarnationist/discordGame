@@ -8,3 +8,6 @@ Mandarin Version: https://zh.wikipedia.org/wiki/%E5%90%B9%E7%89%9B_(%E6%92%B2%E5
 
 ## Other
 Will update this file when it reaches beta version.
+
+## Credit
+Found the card images in @Raffael#7777's Playing Card Emojis Discord server.
