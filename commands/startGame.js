@@ -16,12 +16,15 @@ module.exports = {
 
             Two server boost can increase the number limit from 50 to 100, may add it afterwards.
             You greedy bastard dicord :<
+
+          Update:
+            Find a brilliant way to solve the problem! Idea from Eric Lu (https://github.com/eric-lu-VT)
         */
 
 		//filling the deck
 		const suits = ['H', 'D', 'C', 'S'];
     	const values = ['ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN',
-						 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN'];
+						 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
  
 		for (let suit of suits) {
 			for (let value of values) {
@@ -53,7 +56,7 @@ module.exports = {
 
             //fill players' hands
             for(let i=0; i< gameInfo.players.length;i++){
-                gameInfo.hands[gameInfo.players[i]] = deck.slice(i*12,i*12+12)
+                gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13,i*12+13)
             }
             //find who has ACE_OF_S, set him to be the current player
             for (const [key, value] of Object.entries(gameInfo.hands)) {
@@ -63,6 +66,8 @@ module.exports = {
                 } 
             }
             //start the game
+            //consider not including any emote inside the embed because they are too small
+            //use followups to display card infos
             gameInfo.gameStatus = true
             await interaction.reply({ content: `Game starts now! Below is the round info.`,
             embeds: [gameInfo.roundInfo()] })

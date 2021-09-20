@@ -10,8 +10,9 @@ module.exports = {
 			.setColor('#0099ff')
 			.setTitle('Some title')
 			.setURL('https://discord.js.org')
-			.setDescription('Some description here');
-			
+			.setDescription('<:b10:889445352313348136> \n <:sS:889445352342687824>')
+			.addField('<:diamond_A:889425227300347944>', 'Some value here');
+
 		await interaction.reply({ content: `The bot is alive.`,
 									 embeds: [embed] });
 	},
