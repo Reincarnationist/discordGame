@@ -1,12 +1,13 @@
 // Require the necessary discord.js classes
 const fs = require('fs');
-const { Client, Collection, Intents } = require('discord.js');
+const { Client, Collection, Intents, MessageEmbed } = require('discord.js');
 const { token } = require('./config.json');
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 //initilize game info 
 client.gameInfo = {
+	MAX_PLAYER : 4,
 	gameStatus : false,
 	gamePresence: false,
 	deck : [],
@@ -14,7 +15,18 @@ client.gameInfo = {
 	playerCount: 0,
 	hands : {},
 	cardPool : [],
-	MAX_PLAYER : 4,
+	currentPLayer: null,
+	roundInfo : function(){
+		const embed = new MessageEmbed()
+			.setColor('#0099ff')
+			.setTitle('Current Round Infomation')
+			.setURL('https://discord.js.org')
+			.setDescription('Some description here');
+		return embed
+	},
+	getCard: function(card, pokerCards){
+		//upload discord string repsentives
+	},
 }
 
 

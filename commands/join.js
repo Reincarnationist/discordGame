@@ -8,11 +8,11 @@ module.exports = {
 	async execute(interaction) {
         const join_user = interaction.user.username
         const gameInfo = interaction.client.gameInfo
-		if(interaction.client.gameInfo.gamePresence == false){
+		if(gameInfo.gamePresence == false){
             await interaction.reply(`No game is currently running.`);
             return;
         }else{
-            if(interaction.client.gameInfo.playerCount == interaction.client.gameInfo.MAX_PLAYER){
+            if(gameInfo.playerCount == gameInfo.MAX_PLAYER){
                 await interaction.reply(`Game is full`);
                 return;
             }else { // less than MAX_PLAYER
@@ -22,7 +22,7 @@ module.exports = {
                 }else{
                     gameInfo.players.push(join_user)
                     gameInfo.playerCount ++
-                    await interaction.reply(`Joined game successfully! Now the game has ${gameInfo.players}.`);
+                    await interaction.reply(`Joined game successfully!\nNow the game has ${gameInfo.playerCount} players. \nThey are: ${gameInfo.players}`);
                 }
             }
         }
