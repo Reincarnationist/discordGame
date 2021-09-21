@@ -9,13 +9,14 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 client.gameInfo = {
 	MAX_PLAYER : 4,
 	gameStatus : false,
-	gamePresence: false,
+	gamePresence : false,
 	deck : [],
 	players : [],
-	playerCount: 0,
+	playerCount : 0,
 	hands : {},
 	cardPool : [],
-	currentPlayer: '',
+	currentPlayer : '',
+	nextPlayer : '',
 	roundInfo : function(){
 
 		let dangerPlayer = []
@@ -26,6 +27,12 @@ client.gameInfo = {
 				if(dangerPlayer.includes(keys)) dangerPlayer.splice(dangerPlayer.indexOf(keys),1)
 			}
 		}
+		//not the last one
+		if(this.players.indexOf(this.currentPlayer) != this.players.length-1){
+			this.nextPlayer = this.players[this.players.indexOf(this.currentPlayer) + 1]
+		}else{
+			this.nextPlayer = this.players[0]
+		}
 		
 		const embed = new MessageEmbed()
 			.setColor('#0099ff')
@@ -33,7 +40,7 @@ client.gameInfo = {
 			.setDescription(`This is ${this.currentPlayer}'s turn.'`)
 			.addField(`Total card pool has`, `${this.cardPool.length} cards.`)
 			.addField(`There are ${dangerPlayer.length} players having less than 5 cards!`, `They are ${String(dangerPlayer)}`)
-			.addField(`Next player is`, `${'random'}`);
+			.addField(`Next player is`, `${this.nextPlayer}`);
 		
 		return embed
 		
