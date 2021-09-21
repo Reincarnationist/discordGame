@@ -23,12 +23,13 @@ module.exports = {
 
 		//filling the deck
 		const suits = ['H', 'D', 'C', 'S'];
-    	const values = ['ACE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN',
-						 'EIGHT', 'NINE', 'TEN', 'JACK', 'QUEEN', 'KING'];
+    	const values = ['1', '2', '3', '4', '5', '6', '7',
+						 '8', '9', 'T', 'J', 'Q', 'K'];
  
 		for (let suit of suits) {
 			for (let value of values) {
-				deck.push(values[value] + "_OF_ " + suits[suit]);
+                //'1S','TD','QC', 'KH'
+				deck.push(value + suit);
 			}
 		}
 
@@ -50,27 +51,31 @@ module.exports = {
             console.log(`gamePresence: ${gameInfo.gamePresence}, \nplayerCount: ${gameInfo.playerCount}, \ngameStatus: ${gameInfo.gameStatus}`)
             return;
         }else{
-            //clean first
             gameInfo.hands = {}
             gameInfo.cardPool = []
 
             //fill players' hands
             for(let i=0; i< gameInfo.players.length;i++){
-                gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13,i*12+13)
+                gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13,i*13+13)
             }
-            //find who has ACE_OF_S, set him to be the current player
+
+            //set current player to whom has ACE of Spider
             for (const [key, value] of Object.entries(gameInfo.hands)) {
-                if(value.includes('ACE_OF_S')){
+                if(value.includes('1S')){
                     gameInfo.currentPlayer = key
                     break;
                 } 
             }
+
+
+
+
             //start the game
             //consider not including any emote inside the embed because they are too small
             //use followups to display card infos
             gameInfo.gameStatus = true
             await interaction.reply({ content: `Game starts now! Below is the round info.`,
-            embeds: [gameInfo.roundInfo()] })
+                                        embeds: [gameInfo.roundInfo()] })
 
         }
 		

@@ -15,18 +15,72 @@ client.gameInfo = {
 	playerCount: 0,
 	hands : {},
 	cardPool : [],
-	currentPLayer: null,
+	currentPlayer: '',
 	roundInfo : function(){
+
+		let dangerPlayer = []
+		for(let keys in this.hands){
+			if(this.hands[keys].length < 5){
+				if(!dangerPlayer.includes(keys)) dangerPlayer.push(keys)
+			}else{
+				if(dangerPlayer.includes(keys)) dangerPlayer.splice(dangerPlayer.indexOf(keys),1)
+			}
+		}
+		
 		const embed = new MessageEmbed()
 			.setColor('#0099ff')
 			.setTitle('Current Round Infomation')
-			.setURL('https://discord.js.org')
-			.setDescription('Some description here');
+			.setDescription(`This is ${this.currentPlayer}'s turn.'`)
+			.addField(`Total card pool has`, `${this.cardPool.length} cards.`)
+			.addField(`There are ${dangerPlayer.length} players having less than 5 cards!`, `They are ${String(dangerPlayer)}`)
+			.addField(`Next player is`, `${'random'}`);
+		
 		return embed
+		
 	},
-	getCard: function(card, pokerCards){
-		//upload discord string repsentives
-	},
+	getCard: function(cards, poker){
+		if(cards.length == 0){
+			const error_msg = `Player's hand is empty. Please contact the admin to report the bug.` 
+			let return_array = [error_msg,true]
+			return return_array
+		}else if(cards.length <= 20){
+			let res = ''
+			let first_part = ''
+			let second_part = '\n'
+			for(let card of cards){
+					//black cards
+				if(card[1] === 'S' || card[1] === 'C'){
+					first_part += poker['b' + card[0]]
+				}else{
+					//red cards
+					first_part += poker['r' + card[0]]
+				}
+				second_part += poker[card[1]]
+			}
+			res = first_part + second_part
+			return res
+		}else{
+			let res = ''
+			let first_part = ''
+			let second_part = '\n'
+			const rest = cards.slice(20)
+			let return_array = []
+			for(let card of cards.slice(0,20)){
+					//black cards
+				if(card[1] === 'S' || card[1] === 'C'){
+					first_part += poker['b' + card[0]]
+				}else{
+					//red cards
+					first_part += poker['r' + card[0]]
+				}
+				second_part += poker[card[1]]
+			}
+			res = first_part + second_part
+			return_array = [res,String(rest)]
+			return return_array
+		}
+		
+},
 }
 
 
