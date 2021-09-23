@@ -12,12 +12,16 @@ module.exports = {
 		}else{
             gameInfo.gamePresence = false
             gameInfo.gameStatus = false
-            gameInfo.deck = []
-	        gameInfo.players = []
+			gameInfo.played = false
+            gameInfo.deck.length = 0
+	        gameInfo.players.length = 0
             gameInfo.playerCount = 0
-            gameInfo.hands = {}
-            gameInfo.cardPool = []
-            gameInfo.currentPLayer = null
+            gameInfo.cardPool.length = 0
+            gameInfo.currentPLayer = ''
+			gameInfo.nextPLayer = ''
+			for (let key in gameInfo.hands) {
+				delete gameInfo.hands[key];
+			}
 			await interaction.reply(`End the game now.`)
 			return;
 		}

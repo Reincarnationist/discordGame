@@ -46,13 +46,19 @@ module.exports = {
         //remember to change the playercount back!!!!
         if(!gameInfo.gamePresence || 
             gameInfo.playerCount != 2 || 
-            gameInfo.gameStatus != false){
+            gameInfo.gameStatus){
             await interaction.reply(`Can't start the game. Check console log please.`)
             console.log(`gamePresence: ${gameInfo.gamePresence}, \nplayerCount: ${gameInfo.playerCount}, \ngameStatus: ${gameInfo.gameStatus}`)
             return;
         }else{
-            gameInfo.hands = {}
-            gameInfo.cardPool = []
+            //clear the table first
+            for (let key in gameInfo.hands) {
+                  delete gameInfo.hands[key];
+              }
+            gameInfo.cardPool.length = 0
+            gameInfo.currentPlayer = ''
+            gameInfo.nextPlayer = ''
+            gameInfo.played = false
 
             //fill players' hands
             for(let i=0; i< gameInfo.players.length;i++){

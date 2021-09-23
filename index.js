@@ -6,10 +6,12 @@ const { token } = require('./config.json');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 //initilize game info 
+//cardPool is for internal use only, should not be displayed
 client.gameInfo = {
 	MAX_PLAYER : 4,
 	gameStatus : false,
 	gamePresence : false,
+	played : false,
 	deck : [],
 	players : [],
 	playerCount : 0,
@@ -17,8 +19,16 @@ client.gameInfo = {
 	cardPool : [],
 	currentPlayer : '',
 	nextPlayer : '',
-	roundInfo : function(){
-
+	nextPlayerSetterAndGetter: function(){
+		//not the last one
+		if(this.players.indexOf(this.currentPlayer) != this.players.length-1){
+			this.nextPlayer = this.players[this.players.indexOf(this.currentPlayer) + 1]
+		}else{
+			this.nextPlayer = this.players[0]
+		}
+		return this.nextPlayer
+	},
+	roundInfo: function(){
 		let dangerPlayer = []
 		for(let keys in this.hands){
 			if(this.hands[keys].length < 5){
@@ -27,12 +37,6 @@ client.gameInfo = {
 				if(dangerPlayer.includes(keys)) dangerPlayer.splice(dangerPlayer.indexOf(keys),1)
 			}
 		}
-		//not the last one
-		if(this.players.indexOf(this.currentPlayer) != this.players.length-1){
-			this.nextPlayer = this.players[this.players.indexOf(this.currentPlayer) + 1]
-		}else{
-			this.nextPlayer = this.players[0]
-		}
 		
 		const embed = new MessageEmbed()
 			.setColor('#0099ff')
@@ -40,12 +44,12 @@ client.gameInfo = {
 			.setDescription(`This is ${this.currentPlayer}'s turn.'`)
 			.addField(`Total card pool has`, `${this.cardPool.length} cards.`)
 			.addField(`There are ${dangerPlayer.length} players having less than 5 cards!`, `They are ${String(dangerPlayer)}`)
-			.addField(`Next player is`, `${this.nextPlayer}`);
+			.addField(`Next player is`, `${this.nextPlayerSetterAndGetter()}`);
 		
 		return embed
 		
 	},
-	getCard: function(cards, poker){
+	getCard: function(cards, cardAddress){
 		if(cards.length == 0){
 			const error_msg = `Player's hand is empty. Please contact the admin to report the bug.` 
 			let return_array = [error_msg,true]
@@ -57,12 +61,12 @@ client.gameInfo = {
 			for(let card of cards){
 					//black cards
 				if(card[1] === 'S' || card[1] === 'C'){
-					first_part += poker['b' + card[0]]
+					first_part += cardAddress['b' + card[0]]
 				}else{
 					//red cards
-					first_part += poker['r' + card[0]]
+					first_part += cardAddress['r' + card[0]]
 				}
-				second_part += poker[card[1]]
+				second_part += cardAddress[card[1]]
 			}
 			res = first_part + second_part
 			return res
@@ -75,12 +79,12 @@ client.gameInfo = {
 			for(let card of cards.slice(0,20)){
 					//black cards
 				if(card[1] === 'S' || card[1] === 'C'){
-					first_part += poker['b' + card[0]]
+					first_part += cardAddress['b' + card[0]]
 				}else{
 					//red cards
-					first_part += poker['r' + card[0]]
+					first_part += cardAddress['r' + card[0]]
 				}
-				second_part += poker[card[1]]
+				second_part += cardAddress[card[1]]
 			}
 			res = first_part + second_part
 			return_array = [res,String(rest)]

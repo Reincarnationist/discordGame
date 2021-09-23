@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const poker = require('../cardAddress/pokerCards.js');
+const cardAddress = require('../cardAddress/playingCards.js');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('ping')

@@ -1,6 +1,6 @@
 const { MessageAttachment, MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const poker = require('../cardAddress/pokerCards.js');
+const cardAddress = require('../cardAddress/playingCards.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -18,10 +18,10 @@ module.exports = {
                 await interaction.reply(`You are not in the game.`)
                 return
             }else{
-                const hand = gameInfo.getCard(gameInfo.hands[user], poker)
+                const hand = gameInfo.getCard(gameInfo.hands[user], cardAddress)
                 //more than 20 cards
                 if(Array.isArray(hand)){
-                    if(typeof hand[1] === 'boolean') await interaction.reply(hand)
+                    if(typeof hand[1] === 'boolean') await interaction.reply(hand[0])
                     else{
                         const embed = new MessageEmbed()
                             .setColor('#0099ff')

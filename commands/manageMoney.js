@@ -28,7 +28,7 @@ module.exports = {
                             ])
                             .setRequired(true),
                     )
-                    .addIntegerOption((option) => option.setName('money').setDescription('money to add or remove')),
+                    .addIntegerOption((option) => option.setName('amount').setDescription('money to add or remove')),
             ),
     ),
 
@@ -36,7 +36,7 @@ module.exports = {
 		if (interaction.options.getSubcommand() === 'user') {
 			const user = interaction.options.getUser('target');
             const action = interaction.options.getString('action')
-            const amount = interaction.options.getInteger('money') ? interaction.options.getInteger('money'):0
+            const amount = interaction.options.getInteger('amount') ? interaction.options.getInteger('amount'):0
 			if (user.bot) {
                 await interaction.reply("Sorry, bot does not own a bank account.")
                 return;
