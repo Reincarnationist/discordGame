@@ -9,8 +9,7 @@ module.exports = {
 		
 		const embed = new MessageEmbed()
 			.setColor('#0099ff')
-			.setTitle('Some title')
-			.setURL('https://discord.js.org')
+			.setTitle('Game Info')
 			.addField('card pool', 'hi');
 
 		await interaction.reply({ content: `The bot is alive.`,

@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
 	data: new SlashCommandBuilder()
     .setName('join')
-	.setDescription('join an exist game'),
+	.setDescription('join an existing game'),
 
 	async execute(interaction) {
         const join_user = interaction.user.username

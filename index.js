@@ -9,6 +9,7 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 //cardPool is for internal use only, should not be displayed
 client.gameInfo = {
 	MAX_PLAYER : 4,
+	GAME_MODE : 0,
 	gameStatus : false,
 	gamePresence : false,
 	played : false,

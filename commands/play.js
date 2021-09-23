@@ -52,7 +52,10 @@ module.exports = {
                      ephemeral: true})
                     gameInfo.played = false
                     return;
-                }else{ 
+                }else if(gameInfo.cardPool.length != 0){ 
+                    //cardPool contains declared cards
+                    //need equal number cards of same rank 
+                }else{
                     dCardArray = dCard.match(regex)[0].split(',')
                     dCardArray.pop()
                 }
@@ -82,7 +85,7 @@ module.exports = {
                     gameInfo.hands[user].splice(gameInfo.hands[user].indexOf(c),1)
                 }
                 if(gameInfo.hands[user].length == 0){
-                    await interaction.reply({ content: `The Winner is ${user}!\nGame ends.`, 
+                    await interaction.reply({ content: `The Winner is ${user}!\nGame ends, type /start to play again.`, 
                     files: [new MessageAttachment('./congratsGif/impressive-im-impressed.gif')]});
                     gameInfo.gameStatus = false
                     return
