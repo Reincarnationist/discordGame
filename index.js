@@ -18,6 +18,9 @@ client.gameInfo = {
 	playerCount : 0,
 	hands : {},
 	cardPool : [],
+	previousDeclaringCards : [],
+	currentDeclaringCards : [],
+	currentPlayingCards : [],
 	currentPlayer : '',
 	nextPlayer : '',
 	nextPlayerSetterAndGetter: function(){

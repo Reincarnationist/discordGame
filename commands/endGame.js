@@ -17,6 +17,9 @@ module.exports = {
 	        gameInfo.players.length = 0
             gameInfo.playerCount = 0
             gameInfo.cardPool.length = 0
+			gameInfo.previousDeclaringCards.length = 0
+			gameInfo.currentDeclaringCards.length = 0
+            gameInfo.currentPlayingCards.length = 0
             gameInfo.currentPLayer = ''
 			gameInfo.nextPLayer = ''
 			for (let key in gameInfo.hands) {

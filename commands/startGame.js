@@ -56,6 +56,9 @@ module.exports = {
                   delete gameInfo.hands[key];
               }
             gameInfo.cardPool.length = 0
+            gameInfo.previousDeclaringCards.length = 0
+            gameInfo.currentDeclaringCards.length = 0
+            gameInfo.currentPlayingCards.length = 0
             gameInfo.currentPlayer = ''
             gameInfo.nextPlayer = ''
             gameInfo.played = false
