@@ -28,8 +28,6 @@ module.exports = {
 	async execute(interaction) {
         const gameInfo = interaction.client.gameInfo
         const user = interaction.user.username
-        //test use!!!!!!!
-        gameInfo.currentPlayer = user
 		if(!gameInfo.gameStatus){
             await interaction.reply(`No game is currently running.`)
             return;
@@ -41,6 +39,7 @@ module.exports = {
             return;
         }else{
             gameInfo.played = true
+            gameInfo.challenged = false
             if (interaction.options.getSubcommand() === 'dnp') {
                 const dCard = interaction.options.getString('dcard').toUpperCase()
                 const pCard = interaction.options.getString('pcard').toUpperCase()
@@ -220,7 +219,7 @@ module.exports = {
                             'If you play more than 20 cards then the cards after 20th will be displayed as raw data.')
                             .addField('cards played: ', hand)
                             .addField('Challenge Time: ', 
-                            `You have 10 seconds to type /challange if you doubt ${user}.`);
+                            `You have 15 seconds to type /challange if you doubt ${user}.`);
 
                         
                         await interaction.reply({ embeds: [embed]});
@@ -229,17 +228,23 @@ module.exports = {
                     gameInfo.currentPlayingCards  = pCardArray
                     
                     //challenge will be inserted during this time if any
-
+                    
                     //wait 10s for challenges
                     setTimeout(function() {
-                        gameInfo.played = false
-                        gameInfo.currentPlayer = gameInfo.nextPlayer
-                        gameInfo.previousDeclaringCards = gameInfo.currentDeclaringCards
-                        gameInfo.currentDeclaringCards.length = 0
-                        gameInfo.currentPlayingCards.length = 0
-                        interaction.followUp({ content: `${user}'s Round ends.`,
-									 embeds: [gameInfo.roundInfo()] });
-                        }, (10 * 1000));
+                        //go to challenge.js to handle
+                        if(gameInfo.challenged){
+                            return;
+                        }else{
+                            //no one challenged
+                            gameInfo.played = false
+                            gameInfo.currentPlayer = gameInfo.nextPlayer
+                            gameInfo.previousDeclaringCards = gameInfo.currentDeclaringCards
+                            gameInfo.currentDeclaringCards.length = 0
+                            gameInfo.currentPlayingCards.length = 0
+                            interaction.followUp({ content: `${user}'s Round ends.`,
+                                         embeds: [gameInfo.roundInfo()] });
+                        }
+                        }, (15 * 1000));
                 }
             }
         }

@@ -65,7 +65,13 @@ module.exports = {
 
             //fill players' hands
             for(let i=0; i< gameInfo.players.length;i++){
-                gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13,i*13+13).sort()
+                if(gameInfo.GAME_MODE == 0){
+                    //sort by suit
+                    gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13,i*13+13).sort((a,b) => a[1].localeCompare(b[1]))
+                }else if(gameInfo.GAME_MODE == 1){
+                    gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13,i*13+13).sort()
+                }
+                
             }
 
             //set current player to whom has ACE of Spider

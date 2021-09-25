@@ -13,6 +13,7 @@ client.gameInfo = {
 	gameStatus : false,
 	gamePresence : false,
 	played : false,
+	challenged : false,
 	deck : [],
 	players : [],
 	playerCount : 0,
