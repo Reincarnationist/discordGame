@@ -45,7 +45,7 @@ module.exports = {
 
         //remember to change the playercount back!!!!
         if(!gameInfo.gamePresence || 
-            gameInfo.playerCount != 2 || 
+            gameInfo.playerCount != gameInfo.MAX_PLAYER || 
             gameInfo.gameStatus){
             await interaction.reply(`Can't start the game. Check console log please.`)
             console.log(`gamePresence: ${gameInfo.gamePresence}, \nplayerCount: ${gameInfo.playerCount}, \ngameStatus: ${gameInfo.gameStatus}`)
@@ -62,6 +62,7 @@ module.exports = {
             gameInfo.currentPlayer = ''
             gameInfo.nextPlayer = ''
             gameInfo.played = false
+            gameInfo.challenged = false
 
             //fill players' hands
             for(let i=0; i< gameInfo.players.length;i++){

@@ -31,6 +31,10 @@ module.exports = {
 		if(!gameInfo.gameStatus){
             await interaction.reply(`No game is currently running.`)
             return;
+        }else if(gameInfo.playerCount != gameInfo.MAX_PLAYER){
+            await interaction.reply(`Not enough players, game ends now.`)
+            gameInfo.gameStatus = false
+            return;
         }else if(gameInfo.currentPlayer != user){
             await interaction.reply({ content: `It's not your turn yet.`, ephemeral: true})
             return;

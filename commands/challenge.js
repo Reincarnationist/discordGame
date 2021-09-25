@@ -28,7 +28,7 @@ module.exports = {
                 for(let c of gameInfo.cardPool){
                     gameInfo.hands[user].push(c)
                 }
-                gameInfo.hands[user].sort()
+                gameInfo.hands[user].sort((a,b) => a[1].localeCompare(b[1]))
 
                 await interaction.reply({ 
                 content: 

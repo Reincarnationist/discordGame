@@ -12,6 +12,7 @@ module.exports = {
 		}else{
             gameInfo.gameStatus = false
 			gameInfo.played = false
+			gameInfo.challenged = false
             gameInfo.deck.length = 0
             gameInfo.cardPool.length = 0
 			gameInfo.previousDeclaringCards.length = 0
