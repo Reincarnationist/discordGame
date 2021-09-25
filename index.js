@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { Client, Collection, Intents, MessageEmbed } = require('discord.js');
 const { token } = require('./config.json');
+const cardAddress = require('./cardAddress/playingCards.js');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -46,16 +47,43 @@ client.gameInfo = {
 				if(dangerPlayer.includes(keys)) dangerPlayer.splice(dangerPlayer.indexOf(keys),1)
 			}
 		}
+		let hand = null
+		if(this.currentDeclaringCards.length == 0){
+			hand = 'No declared cards currently.'
+		}else{
+			hand = this.getCard(this.currentDeclaringCards, cardAddress)
+		}
 		
-		const embed = new MessageEmbed()
-			.setColor('#0099ff')
-			.setTitle('Current Round Infomation')
-			.setDescription(`This is ${this.currentPlayer}'s turn.'`)
-			.addField(`Total card pool has`, `${this.cardPool.length} cards.`)
-			.addField(`There are ${dangerPlayer.length} players having less than 5 cards!`, `They are ${String(dangerPlayer)}`)
-			.addField(`Next player is`, `${this.nextPlayerSetterAndGetter()}`);
+		//more than 20 cards
+		if(Array.isArray(hand)){
+			if(typeof hand[1] === 'boolean') return hand[0]
+			else{
+				const embed = new MessageEmbed()
+					.setColor('#0099ff')
+					.setTitle('Current Round Infomation')
+					.setDescription(`This is ${this.currentPlayer}'s turn.'`)
+					.addField(`Total card pool has`, `${this.cardPool.length} cards.`)
+					.addField('Current declaring cards before 20th: ', hand[0])
+					.addField('Current declaring cards after 20th: ', hand[1])
+					.addField(`There are ${dangerPlayer.length} players having less than 5 cards!`, `They are ${String(dangerPlayer)}`)
+					.addField(`Next player is`, `${this.nextPlayerSetterAndGetter()}`);
+				
+				return embed
+			}
+		}else{
+			const embed = new MessageEmbed()
+				.setColor('#0099ff')
+				.setTitle('Current Round Infomation')
+				.setDescription(`This is ${this.currentPlayer}'s turn.'`)
+				.addField(`Total card pool has`, `${this.cardPool.length} cards.`)
+				.addField('Current declaring cards: ', hand)
+				.addField(`There are ${dangerPlayer.length} players having less than 5 cards!`, `They are ${String(dangerPlayer)}`)
+				.addField(`Next player is`, `${this.nextPlayerSetterAndGetter()}`);
+				
+			return embed
+		}
 		
-		return embed
+		
 		
 	},
 	getCard : function(cards, cardAddress){
@@ -116,6 +144,8 @@ client.gameInfo = {
 			this.currency.add(winner.id, total*2);
 		}else{
 			this.currency.add(winner.id, total);
+			//add 1 win too, too lazy to write another function.
+			this.currency.win(winner.id)
 		}
 		return total
 	}
@@ -126,6 +156,24 @@ Reflect.defineProperty(client.gameInfo.currency, 'add', {
 		const user = client.gameInfo.currency.get(id);
 		if (user) {
 			user.balance += Number(amount);
+			return user.save();
+		}
+		else{
+			console.log('database error, user is not defined.')
+			return;
+		}
+		/* 
+		const newUser = await Users.create({ user_id: id, balance: amount });
+		gameInfo.currency.set(id, newUser);
+		return newUser;
+		*/
+	},
+});
+Reflect.defineProperty(client.gameInfo.currency, 'win', {
+	value: async function win(id) {
+		const user = client.gameInfo.currency.get(id);
+		if (user) {
+			user.win_count += 1;
 			return user.save();
 		}
 		else{

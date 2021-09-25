@@ -14,6 +14,7 @@ module.exports = {
             gameInfo.gameStatus = false
 			gameInfo.played = false
 			gameInfo.challenged = false
+			gameInfo.buffable = false
             gameInfo.deck.length = 0
 	        gameInfo.players.length = 0
             gameInfo.playerCount = 0

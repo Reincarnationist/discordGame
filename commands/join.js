@@ -23,7 +23,8 @@ module.exports = {
                     const user = await Users.findOne({ where: { user_id: commandUser.id } });
                     if(!user){
                         await Users.create({ user_id: commandUser.id, balance: 300, win_count: 0 });
-                        await interaction.reply( {content: `Welcome new player ${commandUser.username}, your account has been registered just now.\nThe initial balance is $300.\nEnjoy the game.`,
+                        gameInfo.currency.add(commandUser.id, -5);
+                        await interaction.reply( {content: `Welcome new player ${commandUser.username}, your account has been registered just now.\nThe initial balance is $300.\nThe ticket is $5, enjoy the game.`,
                         ephemeral: true})
                     }else{
                         if(gameInfo.currency.getBalance(commandUser.id) < 5){
