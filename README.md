@@ -1,13 +1,54 @@
-# discordGame
-A card game made with Discord.js which can be played in a discord server.
+# I Doubt It
 
-## Rule
-You can find the game rule here (We are using the last variant which uses 'same rank' system): <br />
-English Version: https://en.wikipedia.org/wiki/Cheat_(game) <br />
-Mandarin Version: https://zh.wikipedia.org/wiki/%E5%90%B9%E7%89%9B_(%E6%92%B2%E5%85%8B%E9%81%8A%E6%88%B2) <br />
+A card game that can be played on a Discord text channel.
 
-## Other
-Will update this file when it reaches beta version.
+## Description
+
+The core of this game is to guess if others are lying or not.
+The required number of player to start the game is set to 4 right now, and the deck size is set to 52 cards. <This will get more flexible in next few releases>
+
+
+## Getting Started
+
+### Dependencies
+
+* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
+* ex. Windows 10
+
+### Installing
+
+* How/where to download your program
+* Any modifications needed to be made to files/folders
+
+### Executing program
+
+* How to run the program
+* Step-by-step bullets
+```
+code blocks for commands
+```
+
+
+## Authors
+
+Contributors names and contact info
+
+Ruizhe (Steven) Yuan 
+https://www.linkedin.com/in/ruizheyuan/
+
+## Version History
+
+* 0.2
+    * Various bug fixes and optimizations
+    * See [commit change]() or See [release history]()
+* 0.1
+    * Initial Release
+
+
+## Acknowledgments
+
+Inspiration, code snippets, etc.
+* [Liars-Poker] https://github.com/eric-lu-VT/Liars-Poker
 
 ## Credit
-Found the card images in @Raffael#7777's Playing Card Emojis Discord server.
+Found the card images in @Raffael#7777's Playing Card Emojis Discord server. Much appreciated!
