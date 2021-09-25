@@ -27,15 +27,21 @@ module.exports = {
 
 	async execute(interaction) {
         const gameInfo = interaction.client.gameInfo
-        const user = interaction.user.username
+        /*
+        we use interaction.user here is because database related code needs user.id
+        and I'm too lazy to change all the instance, just let it be.
+        If somehow the shit really happens, for example, two dummies have the same username
+        UNLUCKY I GUESS THEN.
+        */
+        const user = interaction.user
 		if(!gameInfo.gameStatus){
             await interaction.reply(`No game is currently running.`)
             return;
-        }else if(gameInfo.playerCount != gameInfo.MAX_PLAYER){
+        }else if(gameInfo.playerCount != 2){ //gameInfo.MAX_PLAYER
             await interaction.reply(`Not enough players, game ends now.`)
             gameInfo.gameStatus = false
             return;
-        }else if(gameInfo.currentPlayer != user){
+        }else if(gameInfo.currentPlayer != user.username){
             await interaction.reply({ content: `It's not your turn yet.`, ephemeral: true})
             return;
         }else if(gameInfo.played){
@@ -57,8 +63,16 @@ module.exports = {
                     gameInfo.played = false
                     return;
                 }else{
-                    dCardArray = dCard.match(regex)[0].split(',')
-                    dCardArray.pop()
+                    function wait_for_filling_dCardArray(_callback){
+                        _callback()
+                    }
+                    function finish_filling_dCardArray(){
+                        dCardArray = dCard.match(regex)[0].split(',')
+                        dCardArray.pop()
+                        wait_for_filling_dCardArray(()=>{gameInfo.currentDeclaringCards  = dCardArray})
+                    }
+                    finish_filling_dCardArray()
+                    
                     if(gameInfo.previousDeclaringCards.length != 0){ 
                         if(gameInfo.GAME_MODE == 0){
                             //same rank variant
@@ -77,7 +91,6 @@ module.exports = {
                                         content: `Your declaration of card suit is not valid, please type /play again.`,
                                         ephemeral: true})
                                         gameInfo.played = false
-                                        gameInfo.currentDeclaringCards.length = 0
                                         return;
                                     }
                                 }
@@ -100,7 +113,6 @@ module.exports = {
                                             content: `Your declaration of card rank is not valid, please type /play again.`,
                                             ephemeral: true})
                                             gameInfo.played = false
-                                            gameInfo.currentDeclaringCards.length = 0
                                             return;
                                         }
             
@@ -148,8 +160,16 @@ module.exports = {
                     gameInfo.played = false
                     return;
                 }else{ 
-                    pCardArray = pCard.match(regex)[0].split(',')
-                    pCardArray.pop()
+                    function wait_for_filling_pCardArray(_callback){
+                        _callback()
+                    }
+                    function finish_filling_pCardArray(){
+                        pCardArray = pCard.match(regex)[0].split(',')
+                        pCardArray.pop()
+                        wait_for_filling_pCardArray(()=>{gameInfo.currentPlayingCards = pCardArray})
+                    }
+                    finish_filling_pCardArray()
+                    
                 }
 
                 if(dCardArray.length != pCardArray.length){
@@ -167,7 +187,7 @@ module.exports = {
                         return;
                     }else{
                         for(let c of pCardArray){
-                            if(!gameInfo.hands[user].includes(c)){
+                            if(!gameInfo.hands[user.username].includes(c)){
                                 dCardArray.length = 0 
                                 pCardArray.length = 0 
                                 await interaction.reply({ content: `You don't have ${c} as a playing card, please type /play again.`, 
@@ -183,18 +203,19 @@ module.exports = {
 
                 //remove those cards from user's hand
                 for(let c of pCardArray){
-                    if(gameInfo.hands[user].indexOf(c) === -1){
+                    if(gameInfo.hands[user.username].indexOf(c) === -1){
                     }else{
-                        gameInfo.hands[user].splice(gameInfo.hands[user].indexOf(c),1)
+                        gameInfo.hands[user.username].splice(gameInfo.hands[user.username].indexOf(c),1)
                         gameInfo.cardPool.push(c)
                     }
 
                 }
-                if(gameInfo.hands[user].length == 0){
-                    await interaction.reply({
-                    content: `The Winner is ${user}!\nGame ends, type /start to play again.`, 
-                    files: [new MessageAttachment('./congratsGif/impressive-im-impressed.gif')]});
+                if(gameInfo.hands[user.username].length == 0){
                     gameInfo.gameStatus = false
+                    const moneyWon = gameInfo.gameEndPayment(user)
+                    await interaction.reply({
+                    content: `The Winner is ${user.username}, he just won ${moneyWon}💰! \nGame ends, type /start to play again.`, 
+                    files: [new MessageAttachment('./congratsGif/impressive-im-impressed.gif')]});
                     return;
                 }else{
                     //show declared cards
@@ -205,31 +226,32 @@ module.exports = {
                         else{
                             const embed = new MessageEmbed()
                                 .setColor('#0099ff')
-                                .setTitle(`${user} plays these cards.`)
+                                .setTitle(`${user.username} plays these cards.`)
                                 .setDescription(
                                 'If you play more than 20 cards then the cards after 20th will be displayed as raw data.')
                                 .addField('cards before 20th: ', hand[0])
                                 .addField('cards after 20th: ', hand[1])
                                 .addField('Challenge Time: ', 
-                                `You have 10 seconds to type /challange if you doubt ${user}.`);
+                                `You have 10 seconds to type /challange if you doubt ${user.username}.`);
 
                             await interaction.reply({ embeds: [embed]} );
                         }
                     }else{
                         const embed = new MessageEmbed()
                             .setColor('#0099ff')
-                            .setTitle(`${user} plays these cards.`)
+                            .setTitle(`${user.username} plays these cards.`)
                             .setDescription(
                             'If you play more than 20 cards then the cards after 20th will be displayed as raw data.')
                             .addField('cards played: ', hand)
                             .addField('Challenge Time: ', 
-                            `You have 15 seconds to type /challange if you doubt ${user}.`);
+                            `You have 15 seconds to type /challange if you doubt ${user.username}.`);
 
                         
                         await interaction.reply({ embeds: [embed]});
                     }
-                    gameInfo.currentDeclaringCards  = dCardArray
-                    gameInfo.currentPlayingCards  = pCardArray
+
+                    // gameInfo.currentDeclaringCards  = dCardArray
+                    // gameInfo.currentPlayingCards  = pCardArray
                     
                     //challenge will be inserted during this time if any
                     
@@ -243,9 +265,9 @@ module.exports = {
                             gameInfo.played = false
                             gameInfo.currentPlayer = gameInfo.nextPlayer
                             gameInfo.previousDeclaringCards = gameInfo.currentDeclaringCards
-                            gameInfo.currentDeclaringCards.length = 0
-                            gameInfo.currentPlayingCards.length = 0
-                            interaction.followUp({ content: `${user}'s Round ends.`,
+                            //gameInfo.currentDeclaringCards.length = 0
+                            //gameInfo.currentPlayingCards.length = 0
+                            interaction.followUp({ content: `${user.username}'s Round ends.`,
                                          embeds: [gameInfo.roundInfo()] });
                         }
                         }, (15 * 1000));

@@ -1,7 +1,7 @@
-// Require the necessary discord.js classes
 const fs = require('fs');
 const { Client, Collection, Intents, MessageEmbed } = require('discord.js');
 const { token } = require('./config.json');
+
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
@@ -14,6 +14,7 @@ client.gameInfo = {
 	gamePresence : false,
 	played : false,
 	challenged : false,
+	buffable : false,
 	deck : [],
 	players : [],
 	playerCount : 0,
@@ -24,7 +25,10 @@ client.gameInfo = {
 	currentPlayingCards : [],
 	currentPlayer : '',
 	nextPlayer : '',
-	nextPlayerSetterAndGetter: function(){
+	currency : new Collection(),
+	double : {},
+
+	nextPlayerSetterAndGetter : function(){
 		//not the last one
 		if(this.players.indexOf(this.currentPlayer) != this.players.length-1){
 			this.nextPlayer = this.players[this.players.indexOf(this.currentPlayer) + 1]
@@ -33,7 +37,7 @@ client.gameInfo = {
 		}
 		return this.nextPlayer
 	},
-	roundInfo: function(){
+	roundInfo : function(){
 		let dangerPlayer = []
 		for(let keys in this.hands){
 			if(this.hands[keys].length < 5){
@@ -54,7 +58,7 @@ client.gameInfo = {
 		return embed
 		
 	},
-	getCard: function(cards, cardAddress){
+	getCard : function(cards, cardAddress){
 		if(cards.length == 0){
 			const error_msg = `Player's hand is empty. Please contact the admin to report the bug.` 
 			let return_array = [error_msg,true]
@@ -96,8 +100,58 @@ client.gameInfo = {
 			return return_array
 		}
 		
-},
+	},
+	gameEndPayment : function(winner){
+		let total = 0
+		for(let p of this.players){
+			if(p != winner.username){
+				const lostMoney = this.hands[p].length
+				total += lostMoney
+				let user = client.users.find(user => user.username == p);
+				//system will pay full amount if losers do not have enought money, their balance will be 0 in this case
+				this.currency.getBalance(user.id) >= lostMoney ? this.currency.add(user.id, -lostMoney):this.currency.add(user.id, -this.currency.getBalance(user.id))
+			}
+		}
+		if(this.double[winner.username]){
+			this.currency.add(winner.id, total*2);
+		}else{
+			this.currency.add(winner.id, total);
+		}
+		return total
+	}
 }
+//Helper methods for currency system
+Reflect.defineProperty(client.gameInfo.currency, 'add', {
+	value: async function add(id, amount) {
+		const user = client.gameInfo.currency.get(id);
+		if (user) {
+			user.balance += Number(amount);
+			return user.save();
+		}
+		else{
+			console.log('database error, user is not defined.')
+			return;
+		}
+		/* 
+		const newUser = await Users.create({ user_id: id, balance: amount });
+		gameInfo.currency.set(id, newUser);
+		return newUser;
+		*/
+	},
+});
+
+Reflect.defineProperty(client.gameInfo.currency, 'getBalance', {
+	value: function getBalance(id) {
+		const user = client.gameInfo.currency.get(id);
+		if (user) {
+			return user.balance;
+		}
+		else{
+			console.log('database error, user is not defined.')
+			return;
+		}
+	},
+});
 
 
 //commands to be used

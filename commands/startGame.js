@@ -43,9 +43,9 @@ module.exports = {
 		}
 		gameInfo.deck = deck
 
-        //remember to change the playercount back!!!!
+        //gameInfo.MAX_PLAYER
         if(!gameInfo.gamePresence || 
-            gameInfo.playerCount != gameInfo.MAX_PLAYER || 
+            gameInfo.playerCount != 2|| 
             gameInfo.gameStatus){
             await interaction.reply(`Can't start the game. Check console log please.`)
             console.log(`gamePresence: ${gameInfo.gamePresence}, \nplayerCount: ${gameInfo.playerCount}, \ngameStatus: ${gameInfo.gameStatus}`)
@@ -53,8 +53,11 @@ module.exports = {
         }else{
             //clear the table first
             for (let key in gameInfo.hands) {
-                  delete gameInfo.hands[key];
-              }
+                delete gameInfo.hands[key];
+            }
+              for (let key in gameInfo.double) {
+                delete gameInfo.double[key];
+            }
             gameInfo.cardPool.length = 0
             gameInfo.previousDeclaringCards.length = 0
             gameInfo.currentDeclaringCards.length = 0
@@ -63,6 +66,7 @@ module.exports = {
             gameInfo.nextPlayer = ''
             gameInfo.played = false
             gameInfo.challenged = false
+            gameInfo.buffable = true
 
             //fill players' hands
             for(let i=0; i< gameInfo.players.length;i++){
@@ -83,15 +87,16 @@ module.exports = {
                 } 
             }
 
-
-
-
             //start the game
             //consider not including any emote inside the embed because they are too small
-            //use followups to display card infos
+            //use followups to display card info
+            //wait 10s for players to apply buffs
+            setTimeout(function() {
+                gameInfo.buffable = false
+                }, (10 * 1000));
             gameInfo.gameStatus = true
             await interaction.reply({ content: `Game starts now! Below is the round info.`,
-                                        embeds: [gameInfo.roundInfo()] })
+                embeds: [gameInfo.roundInfo()] })
 
         }
 		
