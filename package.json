@@ -1,7 +1,7 @@
 {
   "name": "discordgame",
   "version": "1.0.0",
-  "description": "a Poker game based on discord bot.",
+  "description": "a card game based on discord bot.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

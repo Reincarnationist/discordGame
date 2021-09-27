@@ -8,6 +8,11 @@ module.exports = {
 
 	async execute(interaction) {
         const commandUser = interaction.user
+        if (!interaction.member.permissions.has("ADMINISTRATOR")){
+            await interaction.reply(`Sorry, you do not have the permission.`);
+            return;
+        }
+        
         const user = await Users.findOne({ where: { user_id: commandUser.id } });
         if(!user){
             await interaction.reply({content: 'You are not registered.',ephemeral: true})
