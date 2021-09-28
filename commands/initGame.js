@@ -34,6 +34,7 @@ module.exports = {
 			
 		}
 		//add the user who init the game to the player list
+		gameInfo.playersId[commandUser.username] = commandUser.id
 		gameInfo.players.push(commandUser.username)
 		gameInfo.playerCount ++
 

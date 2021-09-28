@@ -27,6 +27,9 @@ module.exports = {
 			for (let key in gameInfo.double) {
 				delete gameInfo.double[key];
 			}
+			for (let key in gameInfo.playersId) {
+				delete gameInfo.playersId[key];
+			}
 			await interaction.reply(`Restart the game now.`)
 			return;
 		}

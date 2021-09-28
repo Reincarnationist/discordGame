@@ -29,7 +29,8 @@ module.exports = {
 		for (let suit of suits) {
 			for (let value of values) {
                 //'1S','TD','QC', 'KH'
-				deck.push(value + suit);
+				deck.push(value + suit)
+                //deck.push(value + suit);
 			}
 		}
 
@@ -80,12 +81,15 @@ module.exports = {
             }
 
             //set current player to whom has ACE of Spider
-            for (const [key, value] of Object.entries(gameInfo.hands)) {
-                if(value.includes('1S')){
-                    gameInfo.currentPlayer = key
-                    break;
-                } 
-            }
+            // for (const [key, value] of Object.entries(gameInfo.hands)) {
+            //     if(value.includes('1S')){
+            //         gameInfo.currentPlayer = key
+            //         break;
+            //     } 
+            // }
+
+            gameInfo.currentPlayer = gameInfo.players[Math.floor(Math.random() * (gameInfo.playerCount+1))]
+
 
             //start the game
             //consider not including any emote inside the embed because they are too small

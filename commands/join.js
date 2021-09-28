@@ -12,12 +12,12 @@ module.exports = {
             await interaction.reply(`No game is currently running.`);
             return;
         }else{
-            if(gameInfo.playerCount == gameInfo.MAX_PLAYER){
-                await interaction.reply(`Game is full`);
+            if(gameInfo.players.includes(commandUser.username)){
+                await interaction.reply(`You are already in the game.`);
                 return;
             }else { // less than MAX_PLAYER
-                if(gameInfo.players.includes(commandUser.username)){
-                    await interaction.reply(`You are already in the game.`);
+                if(gameInfo.playerCount == gameInfo.MAX_PLAYER){
+                    await interaction.reply(`Game is full`);
                     return;
                 }else{
                     const user = await Users.findOne({ where: { user_id: commandUser.id } });
@@ -37,6 +37,7 @@ module.exports = {
                             ephemeral: true})
                         }                    
                     }
+                    gameInfo.playersId[commandUser.username] = commandUser.id
                     gameInfo.players.push(commandUser.username)
                     gameInfo.playerCount ++
                     await interaction.followUp(`Joined game successfully!\nNow the game has ${gameInfo.playerCount} players.\nThey are: ${gameInfo.players}\nYou can browse the shop now, you have 10 seconds to apply buffs before game starts.`);

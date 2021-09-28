@@ -14,6 +14,9 @@ module.exports = {
         }else if(gameInfo.currentPlayer != commandUser.username){
             await interaction.reply({ content: `It's not your turn yet.`, ephemeral: true})
             return;
+        }else if(gameInfo.playedOnce){
+            await interaction.reply({ content: `You have played at least once, thus you can't use pass anymore.`, ephemeral: true})
+            return;
         }else{
             const user = await Users.findOne({ where: { user_id: commandUser.id } });
             const item = await Shop.findOne({ where: { name: { [Op.like]: 'Pass' } } });
@@ -25,6 +28,7 @@ module.exports = {
                 if(userItem.amount >= 1){
                     await user.deleteItem(item);
                     gameInfo.currentPlayer = gameInfo.nextPlayer
+                    gameInfo.currentPlayingCards.length = 0
                     await interaction.reply({ content: `${commandUser.username}'s Round ends.`,
                                              embeds: [gameInfo.roundInfo()] });
                 }else{

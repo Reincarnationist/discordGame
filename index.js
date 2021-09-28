@@ -16,7 +16,9 @@ client.gameInfo = {
 	played : false,
 	challenged : false,
 	buffable : false,
+	playedOnce : false,
 	deck : [],
+	playersId : {},
 	players : [],
 	playerCount : 0,
 	hands : {},
@@ -48,10 +50,10 @@ client.gameInfo = {
 			}
 		}
 		let hand = null
-		if(this.currentDeclaringCards.length == 0){
+		if(this.previousDeclaringCards.length == 0){
 			hand = 'No declared cards currently.'
 		}else{
-			hand = this.getCard(this.currentDeclaringCards, cardAddress)
+			hand = this.getCard(this.previousDeclaringCards, cardAddress)
 		}
 		
 		//more than 20 cards
@@ -61,7 +63,7 @@ client.gameInfo = {
 				const embed = new MessageEmbed()
 					.setColor('#0099ff')
 					.setTitle('Current Round Infomation')
-					.setDescription(`This is ${this.currentPlayer}'s turn.'`)
+					.setDescription(`This is ${this.currentPlayer}'s turn.`)
 					.addField(`Total card pool has`, `${this.cardPool.length} cards.`)
 					.addField('Current declaring cards before 20th: ', hand[0])
 					.addField('Current declaring cards after 20th: ', hand[1])
@@ -135,20 +137,31 @@ client.gameInfo = {
 			if(p != winner.username){
 				const lostMoney = this.hands[p].length
 				total += lostMoney
-				let user = client.users.find(user => user.username == p);
+				let user_id = ''
+				for (let key in this.playersId) {
+					if( key == p){
+						user_id = this.playersId[key]
+					}
+				}
 				//system will pay full amount if losers do not have enought money, their balance will be 0 in this case
-				this.currency.getBalance(user.id) >= lostMoney ? this.currency.add(user.id, -lostMoney):this.currency.add(user.id, -this.currency.getBalance(user.id))
+				this.currency.getBalance(user_id) >= lostMoney ? this.currency.add(user_id, -lostMoney):this.currency.add(user_id, -this.currency.getBalance(user_id))
 			}
 		}
 		if(this.double[winner.username]){
 			this.currency.add(winner.id, total*2);
+			this.currency.win(winner.id)
+			return total*2
 		}else{
 			this.currency.add(winner.id, total);
 			//add 1 win too, too lazy to write another function.
 			this.currency.win(winner.id)
+			return total
 		}
-		return total
-	}
+	},
+	resetDPCardArray : function(gameInfo){
+		gameInfo.currentDeclaringCards.length = 0
+		gameInfo.currentPlayingCards.length = 0
+	},
 }
 //Helper methods for currency system
 Reflect.defineProperty(client.gameInfo.currency, 'add', {

@@ -4,7 +4,8 @@ module.exports = {
 		.setName('ping')
 		.setDescription('Replies with server status and ping!'),
 	async execute(interaction) {
+
 		const sent = await interaction.reply({ content: 'Pinging...', fetchReply: true });
-		interaction.editReply(`The bot is alive.\nRoundtrip latency: ${sent.createdTimestamp - interaction.createdTimestamp}ms`);
+		await interaction.editReply(`The bot is alive.\nRoundtrip latency: ${sent.createdTimestamp - interaction.createdTimestamp}ms`);
 	},
 };

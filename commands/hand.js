@@ -25,7 +25,7 @@ module.exports = {
                     else{
                         const embed = new MessageEmbed()
                             .setColor('#0099ff')
-                            .setTitle('Below is your hand.')
+                            .setTitle(`Below is your hand, you have ${gameInfo.hands[user].length} cards.`)
                             .setDescription('If you have more than 20 cards then the cards after 20th will be displayed as raw data.')
                             .addField('hand before 20th: ', hand[0])
                             .addField('hand after 20th: ', hand[1]);
