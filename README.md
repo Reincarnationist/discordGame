@@ -19,23 +19,13 @@ A card game that can be played on a Discord text channel.
 - Game Mode 1:
    - On the way.
 
-## Commands
-
-All the commands start with a slash ```/```, by typing the command you can see the description on it. More detailed information will be shown below.
-Commands avaiable to everyone:
-- ```/initGame```: Initiates a new game with game mode 0, allowing players to join. The user typed this command will be the first player on the table, $5 will be withdrawn from his balance for the entering ticket.
-- ```/join```: Join an initialized but not active game, you have to pay the $5 ticket here.
-- ```startGame```: 
-
-
-
-
 ## Getting Started
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* Node.js is necessary to run the program, NPM comes with Node.js then you can use npm to install all the dependencies the program needs.
+* discord.js, sequelize, and sqlite3 are mandatory.
+* 
 
 ### Installing
 
@@ -44,11 +34,11 @@ Commands avaiable to everyone:
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
+All the commands start with a slash ```/```, by typing the command you can see the description on it. More detailed information will be shown below. </br>
+Commands avaiable to everyone:
+- ```/initGame```: Initiates a new game with game mode 0, allowing players to join. The user typed this command will be the first player on the table, $5 will be withdrawn from his balance for the entering ticket. (If this is the first time the player joins the game then a $300 initial money will be deposited into his account.)
+- ```/join```: Join an initialized but not actively playing game, you have to pay the $5 ticket here. (If this is the first time the player joins the game then a $300 initial money will be deposited into his account.)
+- ```startGame```: 
 
 
 ## Authors
@@ -62,7 +52,7 @@ Contributors names and contact info
 
 * 0.2
     * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
+    * added bank system
 * 0.1
     * Initial Release
 
