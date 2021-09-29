@@ -32,14 +32,19 @@ module.exports = {
                 _callback()
             }
             function finish_comparing_dpCardArray(){
-                for(let d of gameInfo.currentDeclaringCards){
-                    for(let p of gameInfo.currentPlayingCards){
-                        if(d[1] == p[1]){
-                            continue;
-                        }else{
-                            count += 1
-                        }
-                    }
+
+                // for(let d of gameInfo.currentDeclaringCards){
+                //     for(let p of gameInfo.currentPlayingCards){
+                //         if(d[1] == p[1]){
+                //             continue;
+                //         }else{
+                //             count += 1
+                //         }
+                //     }
+                // }
+
+                if(gameInfo.currentDeclaringCards[0][1] != gameInfo.currentPlayingCards[0][1]){
+                    count += 1
                 }
                 wait_for_result(()=>{
                     if(count != 0){
@@ -128,7 +133,7 @@ module.exports = {
                                             gameInfo.gameEndPayment(user)
                                         })
                                         interaction.followUp({
-                                            content: `The Winner is ${user.username}, he just won ${moneyWon}💰! \nGame ends, type /start to play again.`, 
+                                            content: `The Winner is ${user}, he just won ${moneyWon}💰! \nGame ends, type /start to play again.`, 
                                             files: [new MessageAttachment('./congratsGif/impressive-im-impressed.gif')]});
                                         gameInfo.gameStatus = false
                                         return;
@@ -149,6 +154,7 @@ module.exports = {
                         })
 
                         
+
                         for(let c of gameInfo.cardPool){
                             gameInfo.hands[user].push(c)
                         }

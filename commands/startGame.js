@@ -3,11 +3,22 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
 	data: new SlashCommandBuilder()
     .setName('start')
-	.setDescription('Start the game'),
+	.setDescription('Start the game')
+    .addIntegerOption((option) => 
+						option
+						.setName('decks')
+						.setDescription('Please select how many cards you want to start with, 1 for 1 deck (52 cards).')
+						.addChoices([
+							['1', 1],
+							['2', 2],
+						])
+						.setRequired(true),
+						),
 
 	async execute(interaction) {
         const gameInfo = interaction.client.gameInfo
         const deck = []
+        const num_of_cards = interaction.options.getInteger('decks');
 
         /* 
           Deck Note:
@@ -22,31 +33,52 @@ module.exports = {
         */
 
 		//filling the deck
-		const suits = ['H', 'D', 'C', 'S'];
-    	const values = ['1', '2', '3', '4', '5', '6', '7',
-						 '8', '9', 'T', 'J', 'Q', 'K'];
- 
-		for (let suit of suits) {
-			for (let value of values) {
-                //'1S','TD','QC', 'KH'
-				deck.push(value + suit)
-                //deck.push(value + suit);
-			}
-		}
+        if(gameInfo.GAME_MODE == 1){
+            const suits = ['H', 'D', 'C', 'S'];
+            const values = ['1', '2', '3', '4', '5', '6', '7',
+                             '8', '9', 'T', 'J', 'Q', 'K'];
+     
+            for (let suit of suits) {
+                for (let value of values) {
+                    for(let i=0;i<num_of_cards;i++){
+                        deck.push(value + suit)
+                    }
+                    //'1S','TD','QC', 'KH'
+                    //deck.push(value + suit);
+                }
+            }
+    
+            //shuffle the deck
+            let numberOfCards = deck.length;  
+            for (let i=0; i<numberOfCards; i++) {
+                let j = Math.floor(Math.random() * numberOfCards);
+                let temp = deck[i];
+                deck[i] = deck[j];
+                deck[j] = temp;
+            }
+            gameInfo.deck = deck
+        }else if(gameInfo.GAME_MODE == 0){
+            const suits = ['H', 'D', 'C', 'S'];
+            for(let suit of suits){
+                for(let i=0;i<num_of_cards*13;i++){
+                    deck.push('1'+suit)
+                }
+            }
 
-		//shuffle the deck
-		let numberOfCards = deck.length;  
-		for (let i=0; i<numberOfCards; i++) {
-			let j = Math.floor(Math.random() * numberOfCards);
-			let temp = deck[i];
-			deck[i] = deck[j];
-			deck[j] = temp;
-		}
-		gameInfo.deck = deck
+            let numberOfCards = deck.length;  
+            for (let i=0; i<numberOfCards; i++) {
+                let j = Math.floor(Math.random() * numberOfCards);
+                let temp = deck[i];
+                deck[i] = deck[j];
+                deck[j] = temp;
+            }
+            gameInfo.deck = deck
+        }
+		
 
         //gameInfo.MAX_PLAYER
         if(!gameInfo.gamePresence || 
-            gameInfo.playerCount != 2|| 
+            gameInfo.playerCount != gameInfo.MAX_PLAYER|| 
             gameInfo.gameStatus){
             await interaction.reply(`Can't start the game. Check console log please.`)
             console.log(`gamePresence: ${gameInfo.gamePresence}, \nplayerCount: ${gameInfo.playerCount}, \ngameStatus: ${gameInfo.gameStatus}`)
@@ -73,9 +105,9 @@ module.exports = {
             for(let i=0; i< gameInfo.players.length;i++){
                 if(gameInfo.GAME_MODE == 0){
                     //sort by suit
-                    gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13,i*13+13).sort((a,b) => a[1].localeCompare(b[1]))
+                    gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13*num_of_cards,i*13*num_of_cards+13*num_of_cards).sort((a,b) => a[1].localeCompare(b[1]))
                 }else if(gameInfo.GAME_MODE == 1){
-                    gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13,i*13+13).sort()
+                    gameInfo.hands[gameInfo.players[i]] = deck.slice(i*13*num_of_cards,i*13*num_of_cards+13*num_of_cards).sort()
                 }
                 
             }
@@ -88,7 +120,7 @@ module.exports = {
             //     } 
             // }
 
-            gameInfo.currentPlayer = gameInfo.players[Math.floor(Math.random() * (gameInfo.playerCount+1))]
+            gameInfo.currentPlayer = gameInfo.players[Math.floor(Math.random() * (gameInfo.playerCount))]
 
 
             //start the game

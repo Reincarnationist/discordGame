@@ -3,11 +3,22 @@ const { Users } = require('../dbObjects.js');
 module.exports = {
 	data: new SlashCommandBuilder()
     .setName('initgame')
-	.setDescription('initialize a new game'),
+	.setDescription('initialize a new game')
+	.addIntegerOption((option) => 
+						option
+						.setName('gamemode')
+						.setDescription('Please select your game mode.')
+						.addChoices([
+							['0', 0],
+							['1', 1],
+						])
+						.setRequired(true),
+						),
 
 	async execute(interaction) {
 		const gameInfo = interaction.client.gameInfo
 		const commandUser = interaction.user
+		const gameMode = interaction.options.getInteger('gamemode');
 		if(!gameInfo.gamePresence){
 			gameInfo.gamePresence = true
 		}else{
@@ -15,6 +26,7 @@ module.exports = {
 			return;
 		}
 
+		gameInfo.GAME_MODE = gameMode
 		const user = await Users.findOne({ where: { user_id: commandUser.id } });
 		if(!user){
 			await Users.create({ user_id: commandUser.id, balance: 300, win_count: 0 });

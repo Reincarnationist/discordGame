@@ -10,8 +10,8 @@ module.exports = {
             .setName('item')
             .setDescription("What item do you want to buy")
             .addChoices([
-                ['Pass (pass your round, one time use.) : $10', 'pass'],
-                ['Double (double the money you earn, can only apply 10s before game start): $40', 'double'],
+                ['Pass (pass your round, one time use.) : $20', 'pass'],
+                ['Double (double the money you earn, can only apply 10s before game start): $80', 'double'],
             ])
             .setRequired(true),
     ),
