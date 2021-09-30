@@ -86,30 +86,7 @@ module.exports = {
                     dCardArray.pop()
 
                     if(gameInfo.previousDeclaringCards.length != 0){ 
-                        if(gameInfo.GAME_MODE == 0){
-                            //same rank variant
-                            //must have the same number of cards
-                            if(dCardArray.length != gameInfo.previousDeclaringCards.length){
-                                await interaction.reply({ 
-                                    content: `Your declaration of card number is not valid, please type /play again.`,
-                                    ephemeral: true})
-                                gameInfo.resetDPCardArray(gameInfo)
-                                gameInfo.played = false
-                                return;
-                            }else{
-                                for(let c of dCardArray){
-                                    //declared cards' suit does not follow previous declared cards' suit
-                                    if(c[1] != gameInfo.previousDeclaringCards[0][1]){
-                                        await interaction.reply({ 
-                                        content: `Your declaration of card suit is not valid, please type /play again.`,
-                                        ephemeral: true})
-                                        gameInfo.resetDPCardArray(gameInfo)
-                                        gameInfo.played = false
-                                        return;
-                                    }
-                                }
-                            }
-                        }else if(gameInfo.GAME_MODE == 1){
+                        if(gameInfo.GAME_MODE == 1){
                             //classic 
                             //cards rank are not the same
                             if(!dCardArray.every((val, i, arr) => val[0] === arr[0][0])){
@@ -147,28 +124,7 @@ module.exports = {
                             }
                         }
                     }else{
-                        //first round
-                        if(gameInfo.GAME_MODE == 0){
-                            //not same suit
-                            if(!dCardArray.every((val, i, arr) => val[1] === arr[0][1])){
-                                await interaction.reply({ 
-                                content: `Your declaration of card suit is not valid, they must be the same.\nplease type /play again.`,
-                                ephemeral: true})
-                                gameInfo.resetDPCardArray(gameInfo)
-                                gameInfo.played = false
-                                return;
-                            }
-                        }else if(gameInfo.GAME_MODE == 1){
-                            //not same rank
-                            if(!dCardArray.every((val, i, arr) => val[0] === arr[0][0])){
-                                await interaction.reply({ 
-                                content: `Your declaration of card rank is not valid, they must be the same.\nplease type /play again.`,
-                                ephemeral: true})
-                                gameInfo.resetDPCardArray(gameInfo)
-                                gameInfo.played = false
-                                return;
-                            }
-                        }
+                        console.log('bruh2')
                     }
                     
                 }
@@ -346,12 +302,21 @@ module.exports = {
                     gameInfo.played = false
                     return;
                 }else{ 
-                    pCardArray = pCard.match(regex2)[0].split(',')
-                    for(let i=0;i<pCardArray[0];i++){
-                        makeUp_pA.push(`1`+`${pCardArray[1]}`)
+                    //[[1,S], [1,D], ...]
+                    let pCardArrayCollection = []
+                    let cardCount = 0
+                    for(let r of pCard.match(regex2)){
+                        pCardArrayCollection.push(r.split(','))
+                    }
+                    for(let p of pCardArrayCollection){
+                        cardCount += p[0]
+                        for(let i=0;i<p[0];i++){
+                            
+                            makeUp_pA.push(`1`+`${p[1]}`)
+                        }
                     }
                 }
-                if(dCardArray[0] != pCardArray[0]){
+                if(dCardArray[0] != cardCount){
                     await interaction.reply({ 
                     content: `Number of declaring cards must match the number of playing cards.\n please type /play again.`,
                     ephemeral: true})
@@ -360,14 +325,17 @@ module.exports = {
                     return;
                 }else{
                     let count = 0
-                    for(let h of gameInfo.hands[user.username]){
-                        if(h[1] == pCardArray[1]){
-                            count +=1
+                    for(let p of pCardArrayCollection){
+                        for(let h of gameInfo.hands[user.username]){
+                            if(h[1] == p[1]){
+                                count +=1
+                            }
                         }
                     }
+                    
 
-                    if(pCardArray[0] > count){
-                        await interaction.reply({ content: `You don't have enough ${pCardArray[1]} cards, please type /play again.`, 
+                    if(makeUp_pA.length > count){
+                        await interaction.reply({ content: `You don't have enough vaild cards, please type /play again.`, 
                             ephemeral: true})
                             gameInfo.resetDPCardArray(gameInfo)
                             gameInfo.played = false
@@ -382,9 +350,7 @@ module.exports = {
                     gameInfo.cardPool.push(c)
                 }
                 
-
-
-                gameInfo.currentDeclaringCards  = makeUp_dA
+            gameInfo.currentDeclaringCards  = makeUp_dA
                 gameInfo.currentPlayingCards = makeUp_pA
                 //show declared cards
                 const hand = gameInfo.getCard(makeUp_dA, cardAddress)

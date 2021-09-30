@@ -19,6 +19,10 @@ module.exports = {
 		const gameInfo = interaction.client.gameInfo
 		const commandUser = interaction.user
 		const gameMode = interaction.options.getInteger('gamemode');
+		if(gameMode == 1){
+			await interaction.reply(`This Game mode is under construction, sorry about that.`)
+			return;
+		}
 		if(!gameInfo.gamePresence){
 			gameInfo.gamePresence = true
 		}else{
