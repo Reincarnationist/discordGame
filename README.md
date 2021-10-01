@@ -13,7 +13,7 @@ A card game that can be played on a Discord text channel.
    - Cards will be displayed as ACE of Spades(♤), ACE of Hearts(♥), ACE of Diamonds(♢) and ACE of Clubs(♧) because the rank does not matter in this mode.
    - The player can declare and play an arbitrary number (>= 1) of cards with same suit. Declared cards' suit (displayed on the table) can be different from actual played cards' (not displayed), in this case, the player is "cheating".
    - Anyone on the table can doubt the player's cards, if any of them challenges then the actual played cards will be revealed to see whether the player cheated or not .
-   - If all of the actual played card's suit match the declared card's suit, then the challenger fails. He (the challenger) must take all the cards in the card pool and next round starts with the player being challenged.
+   - If all of the actual played cards' suit match the declared cards' suit, then the challenger fails. He (the challenger) must take all the cards in the card pool and next round starts with the player being challenged.
    - If not, then the player being challenged must take all the cards in the card pool and next round starts with the challenger.
    - If no one challenges then the next player must declare exact number of cards with same suit, and so on.
    - Whoever has no cards on hand and survive the challenge wins, the winner can deposit 1 x cards remaining on other players' hands coins into the bank.
@@ -26,7 +26,6 @@ A card game that can be played on a Discord text channel.
 
 * Node.js is necessary to run the program, NPM comes with Node.js then you can use npm to install all the dependencies the program needs.
 * discord.js, @discordjs/rest, discord-api-types, sequelize, and sqlite3 are mandatory.
-* 
 
 ### Installing
 
@@ -34,12 +33,23 @@ A card game that can be played on a Discord text channel.
 * Any modifications needed to be made to files/folders
 
 ### Executing program
+- Inside the folder where you put the code, in the terminal type ```node dbInit.js``` first to initilize the database. 
+- Then type ```node deploy-commands.js``` to register commands with your bot. 
+- After that type ```node index.js``` to wake up the bot, you can see your bot's status is 'Online' now.
 
+### Currency System
+- A simple sqlite database is implemented to make the game more interesting, for example, the currency system, player's inventory, and shop.
+- Currency System: Each player has his own bank account which has $300 at the beginning, each game costs $5 and you can gain some while winning. You can use this money to buy items in the shop, they will appear in your inventory and you can apply them during the game like [Pass], some can only be applied at the beginning of the game like [Double].
+- You can add your own items by modifying the code since this bot is self-hosted.
+### Commands
 All the commands start with a slash ```/```, by typing the command you can see the description on it. More detailed information will be shown below. </br>
 Commands avaiable to everyone:
-- ```/initGame```: Initiates a new game with game mode 0, allowing players to join. The user typed this command will be the first player on the table, $5 will be withdrawn from his balance for the entering ticket. (If this is the first time the player joins the game then a $300 initial money will be deposited into his account.)
+- ```/initGame [int]```: Initiates a new game with game mode [int], allowing players to join. The user typed this command will be the first player on the table, $5 will be withdrawn from his balance for the entering ticket. (If this is the first time the player joins the game then a $300 initial money will be deposited into his account.)
 - ```/join```: Join an initialized but not actively playing game, you have to pay the $5 ticket here. (If this is the first time the player joins the game then a $300 initial money will be deposited into his account.)
-- ```startGame```: 
+- ```/startGame [int]```: Start the game with joined players and clear the deck by giving each player the same amount of cards. A random player will be chosen as the first round player. After using this command, everyone has 10 seconds to use the item 'Double' which can double the money you earn at the end.
+   - [int] is the number of deck cards you will be using for this game. 1 means this game uses one deck of card which is 52 cards, 2 means 104 cards.
+- ```/hand```: Show the cards you have on the hand right now, this message is only visible to you.
+- ```/play```: 
 
 
 ## Authors
