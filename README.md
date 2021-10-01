@@ -10,7 +10,7 @@ A card game that can be played on a Discord text channel.
 - It only support one game mode right now which is the "Same Suit" system, details will be explained below.
    - It will has one more game mode which is based on card rank system in the future.
 - Game Mode 0:
-   - Cards will be displayed as ACE of Spades(♤), ACE of Hearts(♥), ACE of Diamonds(♢) and ACE of Clubs(♧) because the rank does not matter in this mode.
+   - Cards will be displayed as _ACE of Spades(♤), ACE of Hearts(♥), ACE of Diamonds(♢) and ACE of Clubs(♧)_ because the rank does not matter in this mode.
    - The player can declare and play an arbitrary number (>= 1) of cards with same suit. Declared cards' suit (displayed on the table) can be different from actual played cards' (not displayed), in this case, the player is "cheating".
    - Anyone on the table can doubt the player's cards, if any of them challenges then the actual played cards will be revealed to see whether the player cheated or not .
    - If all of the actual played cards' suit match the declared cards' suit, then the challenger fails. He (the challenger) must take all the cards in the card pool and next round starts with the player being challenged.
@@ -49,7 +49,14 @@ Commands avaiable to everyone:
 - ```/startGame [int]```: Start the game with joined players and clear the deck by giving each player the same amount of cards. A random player will be chosen as the first round player. After using this command, everyone has 10 seconds to use the item 'Double' which can double the money you earn at the end.
    - [int] is the number of deck cards you will be using for this game. 1 means this game uses one deck of card which is 52 cards, 2 means 104 cards.
 - ```/hand```: Show the cards you have on the hand right now, this message is only visible to you.
-- ```/play```: 
+- ```/play (suit dnpsuit)```: This is the command for game mode 0. You have two subcommands to fill, dcardsuit and pcardsuit. They stand for declared card suit and played card suit.
+   - Format for dcardsuit is [int],[suit], for example, [3,S] means 3 cards of Spades. (square brackets are not needed while using the command)
+   - Format for pcardsuit is the same as dcardsuit, the only difference is you can type more than one [int],[suit] split by space like this [3,S] [1,D] [1,C]. (Again, square brackets are not needed while using the command)
+   - Your dcardsuit must have exact same number of card and suit as the current declared cards on the table. For example, if the current declared cards are 5 cards of Clubs then your dcardsuit must be [5,C].
+   - pcardsuit can vary from dcardsuit, but the number of cards must match dcardsuit and you must own the card in order to actually play it.
+   - If there has no current declared card then the current player is free to play any cards.
+   - After the current player plays, other player has 15 seconds to challenge him.
+- ```/challenge```: 
 
 
 ## Authors
