@@ -71,7 +71,6 @@ Commands avaiable to everyone:
 - ```/balance```: Check how much do you have right now.
 - ```/inventory```: Browser what's in your inventory.
 - ```/leaderboard```: You can check who is the richest or who wins the most.
-- 
 Commands avaiable to Admin only:
 - ```/close [user] ```: Close the user's account by deleting him from the database, this removes all the money and items he has.
 - ```/manage [user] [action]```: Manage the user's money. (Note: This is not working properly right now.)
