@@ -44,6 +44,7 @@ A card game that can be played on a Discord text channel.
 ### Commands
 All the commands start with a slash ```/```, by typing the command you can see the description on it. More detailed information will be shown below. </br>
 Commands avaiable to everyone:
+#### Game related commands
 - ```/initGame [int]```: Initiates a new game with game mode [int], allowing players to join. The user typed this command will be the first player on the table, $5 will be withdrawn from his balance for the entering ticket. (If this is the first time the player joins the game then a $300 initial money will be deposited into his account.)
 - ```/join```: Join an initialized but not actively playing game, you have to pay the $5 ticket here. (If this is the first time the player joins the game then a $300 initial money will be deposited into his account.)
 - ```/startGame [int]```: Start the game with joined players and clear the deck by giving each player the same amount of cards. A random player will be chosen as the first round player. After using this command, everyone has 10 seconds to use the item 'Double' which can double the money you earn at the end.
@@ -56,8 +57,24 @@ Commands avaiable to everyone:
    - pcardsuit can vary from dcardsuit, but the number of cards must match dcardsuit and you must own the card in order to actually play it.
    - If there has no current declared card then the current player is free to play any cards.
    - After the current player plays, other player has 15 seconds to challenge him.
-- ```/challenge```: 
-
+   - If a player has no cards on his hand after he played and [no one challenges him or he survives from the challenge] then he wins.
+- ```/challenge```: After a player plays, any of the rest players can challenge him if you think he's cheating. If the cards he plays are illegal accroding to the rule then you win the challenge and he must take all the cards in the card pool and the winner is the player of the next round, vice versa.
+   - Whoever gets cards from the card pool will get notified through DM about what cards are they getting.
+- ```/giveup```: Give up the current round and take all the cards in the card pool. This command is usually used when you do not have enough card to match the number of current declared cards.
+- ```/endgame```: End the current game.
+- ```/pass```: Any player can buy this item in the shop and apply it during his round. By using this command, the player does not need to play any card and this round will be skipped, it costs one "Pass" item in the inventory.
+- ```/buff```: Apply buffs before game actually starts, you can't do it during the game. The only time you can apply a buff is 10 seconds after using ```/startGame``` command.
+- ```/info```: Serval info related commands to show different infomation you want.
+#### Database related commands
+- ```/shop```: You can browser items that are currently selling in the shop.
+- ```/buy```: You can buy items from the shop if you have enough money in your pocket.
+- ```/balance```: Check how much do you have right now.
+- ```/inventory```: Browser what's in your inventory.
+- ```/leaderboard```: You can check who is the richest or who wins the most.
+- 
+Commands avaiable to Admin only:
+- ```/close [user] ```: Close the user's account by deleting him from the database, this removes all the money and items he has.
+- ```/manage [user] [action]```: Manage the user's money. (Note: This is not working properly right now.)
 
 ## Authors
 
