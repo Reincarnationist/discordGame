@@ -366,7 +366,7 @@ module.exports = {
                             .addField('cards before 20th: ', hand[0])
                             .addField('cards after 20th: ', hand[1])
                             .addField('Challenge Time: ', 
-                            `You have 10 seconds to type /challange if you doubt ${user.username}.`);
+                            `You have 15 seconds to type /challange if you doubt ${user.username}.`);
 
                         await interaction.reply({ embeds: [embed]} );
                     }
