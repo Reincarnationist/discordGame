@@ -80,7 +80,7 @@ module.exports = {
         if(!gameInfo.gamePresence || 
             gameInfo.playerCount != gameInfo.MAX_PLAYER|| 
             gameInfo.gameStatus){
-            await interaction.reply(`Can't start the game. Check console log please.`)
+            await interaction.reply(`Can't start the game. Check console log please.\nIs game initlized?: ${gameInfo.gamePresence}, \nplayerCount: ${gameInfo.playerCount}, \nIs game active?: ${gameInfo.gameStatus}`)
             console.log(`gamePresence: ${gameInfo.gamePresence}, \nplayerCount: ${gameInfo.playerCount}, \ngameStatus: ${gameInfo.gameStatus}`)
             return;
         }else{
